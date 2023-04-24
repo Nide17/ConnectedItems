@@ -1,0 +1,138 @@
+C++ Programming Assignment 5: Connected Items
+Task: You are required to develop a solution for the connected items problem.
+
+
+Instructions
+1) Download the code and sample data for this assignment from a given location.
+
+Organize the code and the sample input into the following locations:
+/home/dsa/connecteditems/code/src/
+/home/dsa/connecteditems/code/bin/
+/home/dsa/connecteditems/sample_inputs/
+
+2) Each line in an input file will contain coordinates of two locations on a grid, and a flag which indicates whether these locations have a direct connection or not. For example: The entry (2284, 510, 2284, 515, 1) indicates that the location x1=2284, y1=510 is connected to the location x2=2284, y2=515. 
+
+The flag is 1, which means there is a direct connection. You can ignore any other values of the flag that you encounter in the input file.
+
+3) Your goal is to group all locations that are connected to each other directly, or indirectly. There could be multiple groups in an input file.
+
+4) In the output file, you will need to print all the connections, with one direct connection on each line. For example, for the input file sample_01.log, the result is in file: sample_01.log.res.txt. A few lines form the result file are shown below:
+(x1, y1, x2, y2, group number)
+(151, 1464, 151, 1465, 1)
+(151, 1465, 151, 1469, 1)
+....
+(2232, 677, 2232, 681, 2)
+(2232, 681, 2232, 686, 2)
+
+This means that location 151, 1464 is connected to 151, 1465 and is in group 1. Location 151, 1465 is connected to 151, 1469 and is also in group 1. This particular input file has 4 groups. 
+
+This is evident in the result file where the group number has the value: 1,2,3,4. For example, we have shown some other lines from the result file. These lines show that location 2232, 677 is connected to 2232, 681 and is in group 2. Location 2232, 681 is connected to 2232, 686 and is also in group 2.
+
+5) There will be no deviations from the given format in the input files.
+
+6) The groups are assigned based on the size of the connected group. The group having the largest number of connected locations is given group 1, next is Group 2, and so on.
+
+7) You will need to remember the following aspects while generating the output file:
+
+a) All locations must be printed in increasing order of group sizes. i.e., all points belonging to group 1 will be printed first, and then group 2, and so on.
+b) Locations with smaller X, Y coordinates shall be printed before locations having larger X, and Y coordinates. For example, in sample_01.log.res.txt (151, 1464, 151, 1465, 1) appears before (151, 1465, 151, 1469, 1)
+
+c) For groups of the same size:
+
+i) If there are two groups with the same size, a group having the smallest X coordinate shall be printed first.
+ii) If two groups have the same size and the same smallest X coordinate value, the group with the smallest Y coordinate will be printed first.
+
+iii) It is not possible to have two groups with the same size and same value of the smallest X and Y coordinate. If you get such groups, it means your code has a bug
+
+A. How to write your code:
+Your code needs to be implemented in the file ConnectedItems.cpp within the following function:
+ConnectedItems::getConnectedItems(char* inputFilePath, char* outputFilePath)
+You can create other data structures, helper functions, and classes within the files ConnectedItems.h and ConnectedItems.cpp. You must NOT create any other source files.
+
+You cannot use std::template packages. However, you can reuse code, or classes that YOU have written. 
+
+Clues to implementation:
+The first step to solve this would be to read the input file and store it in a format where locations having direct connections can be accessed by your algorithm. This assignment can be solved in an optimal manner if you learn about BitVector and use it to represent sparse matrices.
+
+The second step is to identify all locations that are connected to each other through some other locations. This can be done using the BFS or the DFS algorithm that identifies connected nodes in a graph.
+
+
+Instructions.
+
+Input File Structure
+(x1, y1, x2, y2, group number)
+(13, 2, 13, 3, 1)
+(15, 2, 15, 3, 1)
+(15, 4, 15, 5, 1)
+(15, 3, 15, 4, 1)
+(12, 1, 13, 2, 1)
+(14, 2, 15, 2, 1)
+(15, 5, 15, 6, 1)
+(13, 3, 14, 1, 1)
+
+Output File Structure
+Format: (x1, y1, x2, y2, group number)
+(14, 2, 15, 2, 1)
+(15, 2, 15, 3, 1)
+(15, 3, 15, 4, 1)
+(15, 4, 15, 5, 1)
+(15, 5, 15, 6, 1)
+(12, 1, 13, 2, 2)
+(13, 2, 13, 3, 2)
+(13, 3, 14, 1, 2)
+
+
+Implementation Clues
+● Reading the file.
+○ (x1, y1, x2, y2, group number)
+○ (1999, 1892, 1996, 1994, 3)
+
+● Assume we set rows = 10000, and columns  = 10000. Then we can get a position by
+position = (x1 * 10000) + y1;
+position = (1999 * 10000) + 1892;
+
+○ What do you store at this position?
+■ Next Position
+■ Boolean value
+
+● Graph Representation.
+○ Adjacency Matrix
+○ Adjacency List
+
+
+Building the groups
+○ Depth First Search
+○ Breadth First Search
+● Implementation
+○ HashMap
+■ Key Value Pair with the group count as the key and array of coordinates as the group
+○ Heap
+■ Keep the starting coordinate of the group and the count of values
+■ Keep a pointer to the next group
+○ Arrays
+■ Keep the starting coordinate of the group and the count of values
+○ Need for boolean value or boolean array
+● All these implementations require sorting by the count of values in the group. End of a group is 
+determined by no next connecting element.
+● Groups with same count, consider groups with smaller x1 elements first, if these match, then look at 
+y1 elements.
+
+
+Put your code in the method below.
+ConnectedItems::getConnectedItems(char* inputFilePath, char* outputFilePath)
+You are free to write as many methods or classes as you wish, as long as they are referenced in the above 
+method either indirectly or directly.
+Do not create any new header or cpp files.
+Run your code as in the structure below.
+./homework inputFilePath outputFilePath
+
+
+Summary
+● Read the file by help of adjacency list or adjacency matrix.
+● Use DFS or BFS algorithms to create and map out the groups.
+● Use hash maps, heaps or arrays to store the groups.
+● Sort the data structure used above based on number of items in the group, consider x1 and y1 if the 
+group count is the same.
+● Implementations discussed here are merely suggestions.
+● The limit of implementations is based on the limit of your imagination.
+
